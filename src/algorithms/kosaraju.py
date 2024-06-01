@@ -1,5 +1,5 @@
-from src.application.graphs.directed_graph import DirectedGraph
-from src.application.services.directed_graph_service import DirectedGraphService
+from src.graphs.directed_graph import DirectedGraph
+from src.services.directed_graph_service import DirectedGraphService
 from queue import Queue
 
 
@@ -9,7 +9,7 @@ class Kosaraju:
     def run(self):
         """ Read a directed graph from a file and display its strongly connected components. """
 
-        self.__graph = DirectedGraphService.read_graph_from_file("src/text files/graph.txt")
+        self.__graph = DirectedGraphService.read_graph_from_file("database/graph.txt")
         scc = self.__get_strongly_connected_components()
 
         print("Strongly connected components:")

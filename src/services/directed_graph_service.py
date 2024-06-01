@@ -1,21 +1,21 @@
 import random
 
-from src.application.graphs.undirected_graph import UndirectedGraph
+from src.graphs.directed_graph import DirectedGraph
 
 
-class UndirectedGraphService:
+class DirectedGraphService:
     @staticmethod
     def read_graph_from_file(file_path):
         with open(file_path, "r") as input_file:
             vertices, edges = input_file.readline().strip().split(" ")
             vertices, edges = int(vertices), int(edges)
 
-            graph = UndirectedGraph(vertices)
+            graph = DirectedGraph(vertices)
 
             for _ in range(edges):
-                start, end, = input_file.readline().strip().split(" ")
-                start, end = int(start), int(end)
-                graph.add_edge((start, end))
+                start, end, cost = input_file.readline().strip().split(" ")
+                start, end, cost = int(start), int(end), int(cost)
+                graph.add_edge((start, end), cost)
 
             return graph
 
@@ -27,11 +27,12 @@ class UndirectedGraphService:
 
             for edge in graph.edges:
                 start, end = edge
-                output_file.write(f"{start} {end}\n")
+                cost = graph.get_cost(edge)
+                output_file.write(f"{start} {end} {cost}\n")
 
     @staticmethod
     def generate_random_graph(vertices, edges):
-        graph = UndirectedGraph(vertices)
+        graph = DirectedGraph(vertices)
         free_edges = [(start, end) for start in range(vertices) for end in range(vertices) if start != end]
         generated_edges = []
 
@@ -39,11 +40,12 @@ class UndirectedGraphService:
             edge = random.choice(free_edges)
             free_edges.remove(edge)
 
-            generated_edges.append(edge)
+            cost = random.randint(1, 100)
+            generated_edges.append((edge, cost))
 
-        generated_edges = sorted(generated_edges, key=lambda x: x[0])
+        generated_edges = sorted(generated_edges, key=lambda x: x[0][0])
 
-        for edge in generated_edges:
-            graph.add_edge(edge)
+        for edge, cost in generated_edges:
+            graph.add_edge(edge, cost)
 
         return graph

@@ -1,4 +1,4 @@
-from src.application.algorithms import *
+from algorithms.kosaraju import Kosaraju
 
 
 if __name__ == "__main__":
