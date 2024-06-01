@@ -48,7 +48,6 @@ class Tarjan:
         # If the low link value of the vertex is equal to itself, it is the root of a strongly connected component
         if low_link[vertex] == vertex:
             current = visited.pop() if visited else 0
-
             # Update the low link values of the vertices in the strongly connected component
             while visited:
                 low_link[current] = vertex
