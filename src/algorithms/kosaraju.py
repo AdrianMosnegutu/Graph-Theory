@@ -1,6 +1,7 @@
+from queue import Queue
+
 from src.graphs.directed_graph import DirectedGraph
 from src.services.directed_graph_service import DirectedGraphService
-from queue import Queue
 
 
 class Kosaraju:

@@ -1,14 +1,16 @@
+from queue import PriorityQueue
+
 from src.graphs.directed_graph import DirectedGraph
 from src.services.directed_graph_service import DirectedGraphService
 
 
-class BellmanFord:
+class Dijkstra:
     __graph: DirectedGraph
 
     def run(self):
         """
         Reads a directed graph, a source vertex and a destination vertex from a file and displays the minimum
-        cost walk from the source vertex to the destination vertex using the Bellman-Ford algorithm.
+        cost walk from the source vertex to the destination vertex using the Dijkstra algorithm.
         """
 
         self.__graph = DirectedGraphService.read_graph_from_file("database/shortest_path_data.txt")
@@ -21,7 +23,7 @@ class BellmanFord:
 
     def __get_minimum_cost_walk(self, source, destination):
         """
-        Calculates the minimum cost walk from a source vertex to a destination vertex using the Bellman-Ford algorithm.
+        Calculates the minimum cost walk from a source vertex to a destination vertex using the Dijkstra algorithm.
 
         :type source: int
         :param source: The source vertex
@@ -37,21 +39,24 @@ class BellmanFord:
         # Initialize the distance and previous vertex dictionaries
         dist = {vertex: float('inf') for vertex in self.__graph.vertices}
         prev = {}
+        q = PriorityQueue()
 
-        # Set the distance of the source vertex to 0
+        q.put((0, source))
         dist[source] = 0
-        changed = True
 
-        # Relax the edges until no more changes can be made
-        while changed:
-            changed = False
+        # Traverse the graph using Dijkstra's algorithm
+        while not q.empty():
+            vertex = q.get()[1]
+            if vertex == destination:
+                break
 
-            # Traverse all the edges
-            for start, end in self.__graph.edges:
-                if dist[end] > dist[start] + self.__graph.get_cost((start, end)):
-                    dist[end] = dist[start] + self.__graph.get_cost((start, end))
-                    prev[end] = start
-                    changed = True
+            # Traverse the neighbours of the current vertex and update the distance and previous vertex dictionaries
+            for neighbour in self.__graph.outbound_neighbours(vertex):
+                cost = self.__graph.get_cost((vertex, neighbour))
+                if neighbour not in dist or dist[vertex] + cost < dist[neighbour]:
+                    dist[neighbour] = dist[vertex] + cost
+                    q.put((dist[neighbour], neighbour))
+                    prev[neighbour] = vertex
 
         # If the destination vertex is unreachable, return None and infinity
         if dist[destination] == float('inf'):
