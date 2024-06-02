@@ -10,7 +10,7 @@ class Tarjan:
         Reads a directed graph from a file and displays its strongly connected components.
         """
 
-        self.__graph = DirectedGraphService.read_graph_from_file("database/graph.txt")
+        self.__graph = DirectedGraphService.read_graph_from_file("database/scc_data.txt")
         ans = self.__get_strongly_connected_components()
 
         print("Strongly connected components:")
